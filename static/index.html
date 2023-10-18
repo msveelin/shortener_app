@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>URLSHORTS</h1>
+      <p id="bio">The Python URL Shortener</p>
+      <div>
+        <form action="http://localhost:8000/url" method="post">
+          <input
+            name="target_url"
+            type="text"
+            placeholder="Paste your link here..."
+          />
+          <button type="submit">GENERATE LINK</button>
+        </form>
+        <p>Your link: <span id="response-container"></span></p>
+      </div>
+    </main>
+    <script>
+      document.querySelector("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const targetUrl = document.querySelector(
+          'input[name="target_url"]'
+        ).value;
+        const requestData = {
+          target_url: targetUrl,
+        };
+
+        try {
+          const response = await fetch("http://localhost:8000/url", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          });
+
+          if (response.ok) {
+            // Handle the response, e.g., show a success message or redirect
+            const responseData = await response.json();
+            const responseContainer = document.querySelector('#response-container')
+            responseContainer.innerHTML = `<a href="${responseData.url}">${responseData.url}</a>`
+          } else {
+            // Handle errors, e.g., display an error message
+          }
+        } catch (error) {
+          // Handle network or other errors
+        }
+      });
+    </script>
+  </body>
+</html>
